@@ -47,12 +47,25 @@ export const getUser = async (req, res, next) => {
  */
 export const newUser = async (req, res, next) => {
   try {
-    const data = await UserService.newUser(req.body);
-    res.status(HttpStatus.CREATED).json({
-      code: HttpStatus.CREATED,
-      data: data,
-      message: 'User created successfully'
+    console.log(req.body);
+    const user = await UserService.getUserByEmail({
+      email: req.body.email
     });
+    if (!user) {
+      // If user doesn't exist, user can be created
+      const data = await UserService.newUser(req.body);
+      res.status(HttpStatus.CREATED).json({
+        code: HttpStatus.CREATED,
+        data: data,
+        message: 'User created successfully'
+      });
+    } else {
+      // If user already exists, return conflict status
+      res.status(HttpStatus.CONFLICT).json({
+        code: HttpStatus.CONFLICT,
+        message: 'User already existed'
+      });
+    }
   } catch (error) {
     next(error);
   }
