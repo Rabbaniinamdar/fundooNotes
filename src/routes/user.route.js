@@ -2,7 +2,7 @@
 import express from 'express';
 import * as userController from '../controllers/user.controller';
 // eslint-disable-next-line max-len
-import { newUserValidator, loginUserValidator } from '../validators/user.validator';
+import { newUserValidator, loginUserValidator, UpdateUserValidator } from '../validators/user.validator';
 // import { userAuth } from '../middlewares/auth.middleware';
 
 const router = express.Router();
@@ -20,7 +20,7 @@ router.post('/login', loginUserValidator, userController.userLogin);
 router.get('/:_id', userController.getUser);
 
 //route to update a single user by their user id
-router.put('/:_id', userController.updateUser);
+router.put('/:_id', UpdateUserValidator, userController.updateUser);
 
 //route to delete a single user by their user id
 router.delete('/:_id', userController.deleteUser);
