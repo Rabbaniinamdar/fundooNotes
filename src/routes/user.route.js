@@ -1,6 +1,8 @@
+/* eslint-disable prettier/prettier */
 import express from 'express';
 import * as userController from '../controllers/user.controller';
-// import { newUserValidator } from '../validators/user.validator';
+// eslint-disable-next-line max-len
+import { newUserValidator, loginUserValidator } from '../validators/user.validator';
 // import { userAuth } from '../middlewares/auth.middleware';
 
 const router = express.Router();
@@ -9,7 +11,10 @@ const router = express.Router();
 router.get('', userController.getAllUsers);
 
 //route to create a new user
-router.post('/register', userController.newUser);
+router.post('/register', newUserValidator, userController.newUser);
+
+//route to login the user
+router.post('/login', loginUserValidator, userController.userLogin);
 
 //route to get a single user by their user id
 router.get('/:_id', userController.getUser);

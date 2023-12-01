@@ -1,5 +1,5 @@
+/* eslint-disable prettier/prettier */
 import User from '../models/user.model';
-
 //get all users
 export const getAllUsers = async () => {
   const data = await User.find();
