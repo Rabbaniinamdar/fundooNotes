@@ -1,5 +1,7 @@
+/* eslint-disable max-len */
 /* eslint-disable prettier/prettier */
 import User from '../models/user.model';
+import bcrypt from 'bcrypt'
 //get all users
 // export const getAllUsers = async () => {
 //   const data = await User.find();
@@ -12,8 +14,13 @@ export const UserRegister = async (body) => {
     const user = await User.findOne({ email: body.email });
     if (!user) {
       // Check if password matches confirm password
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(body.password, salt);
       if (body.password === body.confirmpassword) {
+        body.password = hash
+        body.confirmpassword = hash
         const data = await User.create(body);
+        console.log(data)
         return data;
       } else {
         return 'Password is not matching';
@@ -29,22 +36,8 @@ export const UserRegister = async (body) => {
   }
 };
 
-export const userLogin = async (body) => {
-  const user = await User.findOne({ email: body.email });
-  if (user) {
-    // if User exists, check password is correct or not
-    if (body.password === user.password) {
-      //if Passwords match
-      return 'User logged in successfully'
-    } else {
-      // Passwords don't match
-      return 'Incorrect password'
-    }
-  } else {
-    //if User not found
-    return 'User not found'
-  }
-}
+
+
 //update single user
 // export const updateUser = async (_id, body) => {
 //   const data = await User.findByIdAndUpdate(
