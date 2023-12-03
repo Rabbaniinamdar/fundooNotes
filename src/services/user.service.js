@@ -1,12 +1,6 @@
-/* eslint-disable max-len */
 /* eslint-disable prettier/prettier */
 import User from '../models/user.model';
 import bcrypt from 'bcrypt'
-//get all users
-// export const getAllUsers = async () => {
-//   const data = await User.find();
-//   return data;
-// };
 
 //create new user
 export const UserRegister = async (body) => {
@@ -38,30 +32,23 @@ export const UserRegister = async (body) => {
 
 
 
-//update single user
-// export const updateUser = async (_id, body) => {
-//   const data = await User.findByIdAndUpdate(
-//     {
-//       _id
-//     },
-//     body,
-//     {
-//       new: true
-//     }
-//   );
-//   return data;
-// };
-
-// //delete single user
-// export const deleteUser = async (id) => {
-//   await User.findByIdAndDelete(id);
-//   return '';
-// };
-
-// //get single user
-// export const getUser = async (id) => {
-//   const data = await User.findById(id);
-//   return data;
-// };
-
+export const userLogin = async (body) => {
+  const user = await User.findOne({ email: body.email });
+  if (user) {
+    // Check if the provided password matches the stored hash
+    // eslint-disable-next-line max-len
+    const isPasswordCorrect = await bcrypt.compare(body.password, user.password);
+    console.log(isPasswordCorrect)
+    if (isPasswordCorrect) {
+      // Passwords match
+      return 'User logged in successfully';
+    } else {
+      // Passwords don't match
+      return 'Incorrect password';
+    }
+  } else {
+    // User not found
+    return 'User not found';
+  }
+};
 
