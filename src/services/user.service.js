@@ -29,7 +29,22 @@ export const UserRegister = async (body) => {
   }
 };
 
-
+export const userLogin = async (body) => {
+  const user = await User.findOne({ email: body.email });
+  if (user) {
+    // if User exists, check password is correct or not
+    if (body.password === user.password) {
+      //if Passwords match
+      return 'User logged in successfully'
+    } else {
+      // Passwords don't match
+      return 'Incorrect password'
+    }
+  } else {
+    //if User not found
+    return 'User not found'
+  }
+}
 //update single user
 // export const updateUser = async (_id, body) => {
 //   const data = await User.findByIdAndUpdate(
