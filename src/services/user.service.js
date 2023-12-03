@@ -4,13 +4,16 @@ import bcrypt from 'bcrypt'
 
 //create new user
 export const UserRegister = async (body) => {
+  let { email, password,confirmpassword } = body;
+
   try {
-    const user = await User.findOne({ email: body.email });
+    const user = await User.findOne({ email: email });
+    // If user not exists
     if (!user) {
-      // Check if password matches confirm password
       const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(body.password, salt);
-      if (body.password === body.confirmpassword) {
+      const hash = await bcrypt.hash(password, salt);
+      // Check if password matches confirm password
+      if (password === confirmpassword) {
         body.password = hash
         body.confirmpassword = hash
         const data = await User.create(body);
@@ -20,7 +23,7 @@ export const UserRegister = async (body) => {
         return 'Password is not matching';
       }
     } else {
-      // If user already exists, return a message
+      // If user already exists
       return 'User already exists';
     }
   } catch (error) {
@@ -33,11 +36,12 @@ export const UserRegister = async (body) => {
 
 
 export const userLogin = async (body) => {
-  const user = await User.findOne({ email: body.email });
+  let { email, password } = body;
+  const user = await User.findOne({ email: email });
   if (user) {
     // Check if the provided password matches the stored hash
     // eslint-disable-next-line max-len
-    const isPasswordCorrect = await bcrypt.compare(body.password, user.password);
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
     console.log(isPasswordCorrect)
     if (isPasswordCorrect) {
       // Passwords match
