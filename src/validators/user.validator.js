@@ -1,10 +1,11 @@
+/* eslint-disable prettier/prettier */
 import Joi from '@hapi/joi';
 import HttpStatus from 'http-status-codes';
 
 export const newUserValidator = (req, res, next) => {
   const schema = Joi.object({
-    firstname: Joi.string().min(4).required(),
-    lastname: Joi.string().min(4).required(),
+    firstname: Joi.string().min(1).required(),
+    lastname: Joi.string().min(1).required(),
     email: Joi.string().min(4).required(),
     password: Joi.string().min(8).required(),
     confirmpassword: Joi.string().required()

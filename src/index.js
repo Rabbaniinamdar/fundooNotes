@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -10,7 +11,7 @@ import database from './config/database';
 import {
   appErrorHandler,
   genericErrorHandler,
-  notFound
+  notFound,
 } from './middlewares/error.middleware';
 import logger, { logStream } from './config/logger';
 
