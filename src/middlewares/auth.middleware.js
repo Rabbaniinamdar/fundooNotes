@@ -20,7 +20,6 @@ export const userAuth = async (req, res, next) => {
     res.locals.user = user;
     res.locals.token = bearerToken;
     console.log(res.locals.user)
-    // console.log(bearerToken)
     next();
   } catch (error) {
     next(error);

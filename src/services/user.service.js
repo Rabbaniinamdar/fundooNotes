@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import User from '../models/user.model';
-import Note from '../models/note.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -52,11 +51,4 @@ export const userLogin = async (body) => {
   } else {
     throw new Error('User not found');
   }
-};
-
-export const addToNote = async (res, body) => {
-  const currentUser = res.locals.user.userId;
-  body.email = currentUser
-  const newNote = await Note.create(body);
-  return newNote;
 };
