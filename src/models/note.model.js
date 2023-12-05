@@ -2,7 +2,7 @@
 import { Schema, model } from 'mongoose';
 const AddToNoteSchema = new Schema(
     {
-        _id: {
+        userId: {
             type: String
         },
         title: {

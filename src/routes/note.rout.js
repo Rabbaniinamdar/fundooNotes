@@ -8,7 +8,16 @@ import { userAuth } from '../middlewares/auth.middleware';
 const router = express.Router();
 
 //route to add to note
-router.post('/addnote', userAuth, noteController.addToNote);
+router.post('/', userAuth, noteController.addToNote);
+
+router.get('/', userAuth, noteController.getAllNoteOfUser);
+
+router.get('/:id', userAuth, noteController.getNoteofUser);
+
+router.put('/:id', noteController.updateNote);
+
+router.delete('/:id', noteController.deleteNote);
+
 
 
 export default router;
