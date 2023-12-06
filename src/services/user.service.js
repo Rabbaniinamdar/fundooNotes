@@ -55,35 +55,43 @@ export const userLogin = async (body) => {
 
 // Log in the user and generate a JWT
 export const forgetPassword = async (body) => {
-  console.log(body)
-  let { email, password, confirmpassword } = body;
-  const user = await User.findOne({ email: email });
-  const isCurrPrevMatch = await bcrypt.compare(password, user.password);
-  if (user) {
+  try {
+    let { email, password, confirmpassword } = body;
+
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const isCurrPrevMatch = await bcrypt.compare(password, user.password);
+
     if (!isCurrPrevMatch) {
       if (password === confirmpassword) {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
         body.password = hash;
         body.confirmpassword = hash;
-        const data = await User.findByIdAndUpdate(
+
+        const updatedUser = await User.findByIdAndUpdate(
           user.id,
           body,
           {
             new: true
           }
         );
-        return data;
+
+        return updatedUser;
       } else {
         throw new Error('Password is not matching');
       }
     } else {
-      throw new Error('Enterd Password shuold not same as previous password');
+      // eslint-disable-next-line max-len
+      throw new Error('Entered Password should not be the same as the previous password');
     }
-  } else {
-    throw new Error('User not found');
+  } catch (error) {
+    throw new Error(error.message);
   }
-}
+};
 
 export const resetPassword = async (id, body) => {
   let { oldpassword, newpassword, confirmpassword } = body;
