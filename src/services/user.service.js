@@ -4,28 +4,34 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
-
 const SecretKey = process.env.SECRET_KEY;
 
+//Function to Generate the JWT Token
 const generateToken = (userId) => {
   const token = jwt.sign({ userId }, SecretKey, { expiresIn: '1h' });
   return token;
 };
 
-// Create a new user and generate a JWT
+//Function to Hash(encrypt) the password
+const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  return hash;
+}
+
+// Create a new user
 export const UserRegister = async (body) => {
   let { email, password, confirmpassword } = body;
   const user = await User.findOne({ email: email });
   // If user not exists
   if (!user) {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
+    const hash = await hashPassword(password);
+    console.log(hash)
     // Check if password matches confirm password
     if (password === confirmpassword) {
       body.password = hash;
       body.confirmpassword = hash;
       const newUser = await User.create(body);
-      // Generate and return a JWT
       return { data: 'User Registered Successfully', newUser };
     } else {
       throw new Error('Password is not matching');
@@ -53,39 +59,40 @@ export const userLogin = async (body) => {
   }
 };
 
-// Log in the user and generate a JWT
+// Forget Password
 export const forgetPassword = async (body) => {
   try {
     let { email, password, confirmpassword } = body;
-
     const user = await User.findOne({ email: email });
+
+    //if the enterd email is not correct
     if (!user) {
       throw new Error('User not found');
     }
 
+    // Check if the current password matching the stored password
     const isCurrPrevMatch = await bcrypt.compare(password, user.password);
-
     if (!isCurrPrevMatch) {
+
+      // Check if password matching confirm password
       if (password === confirmpassword) {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt);
+        const hash = await hashPassword(password);
         body.password = hash;
         body.confirmpassword = hash;
 
-        const updatedUser = await User.findByIdAndUpdate(
+        //update new password
+        const updatePassword = await User.findByIdAndUpdate(
           user.id,
           body,
           {
             new: true
           }
         );
-
-        return updatedUser;
+        return updatePassword;
       } else {
         throw new Error('Password is not matching');
       }
     } else {
-      // eslint-disable-next-line max-len
       throw new Error('Entered Password should not be the same as the previous password');
     }
   } catch (error) {
@@ -93,26 +100,30 @@ export const forgetPassword = async (body) => {
   }
 };
 
+// Reset Password
 export const resetPassword = async (id, body) => {
   let { oldpassword, newpassword, confirmpassword } = body;
   const user = await User.findById(id);
+
+  // Check if the current password matching the stored password
   const isCurrPrevMatch = await bcrypt.compare(oldpassword, user.password);
-  console.log(isCurrPrevMatch)
   if (isCurrPrevMatch) {
     if (oldpassword !== newpassword) {
+
+      // Check if password matching confirm password
       if (newpassword === confirmpassword) {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(newpassword, salt);
+        const hash = await hashPassword(password);
         body.password = hash;
         body.confirmpassword = hash;
-        const data = await User.findByIdAndUpdate(
-          user.id,
+
+        //update new password
+        const updatePassword = await User.findByIdAndUpdate(user.id,
           body,
           {
             new: true
           }
         );
-        return data;
+        return updatePassword;
       } else {
         throw new Error('New Password and Confirm password is not matching');
       }

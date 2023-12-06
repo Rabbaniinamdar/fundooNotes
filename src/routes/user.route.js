@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 /* eslint-disable prettier/prettier */
 import express from 'express';
 import * as userController from '../controllers/user.controller';
@@ -14,8 +13,10 @@ router.post('/register', newUserValidator, userController.UserRegister);
 //route to login the user
 router.post('/login', loginUserValidator, userController.userLogin);
 
+//route to do Forget password
 router.put('/forgetpassword', forgetPasswordValidator, userController.forgetPassword);
 
+//route to do Reset password
 router.put('/resetpassword/:id', userAuth, resetPasswordValidator, userController.resetPassword);
 
 

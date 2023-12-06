@@ -1,6 +1,4 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable max-len */
-/* eslint-disable prettier/prettier */
 import HttpStatus from 'http-status-codes';
 import * as UserService from '../services/user.service';
 
