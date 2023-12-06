@@ -38,10 +38,9 @@ export const loginUserValidator = (req, res, next) => {
     next();
   }
 };
-export const UpdateUserValidator = (req, res, next) => {
+
+export const forgetPasswordValidator = (req, res, next) => {
   const schema = Joi.object({
-    firstname: Joi.string().required(),
-    lastname: Joi.string().required(),
     password: Joi.string().min(8).required(),
     confirmpassword: Joi.string().required()
   });

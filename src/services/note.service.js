@@ -39,8 +39,8 @@ export const updateNote = async (id, body) => {
     return data;
 };
 
-export const archiveNote = async () => {
-    const data = await Note.find({ archived: true });
+export const archiveNote = async (currentUser) => {
+    const data = await Note.find({ archived: true, userId: currentUser });
     return data;
 };
 

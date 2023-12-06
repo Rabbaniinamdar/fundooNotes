@@ -84,11 +84,12 @@ export const deleteNote = async (req, res) => {
 
 
 export const archiveNote = async (req, res) => {
-    console.log('error')
+    const currentUser = res.locals.user.userId;
     try {
-        await NoteService.archiveNote();
+        const data=await NoteService.archiveNote(currentUser);
         res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
+            data: data,
             message: 'Fetched Archived Notes Successfully'
         });
     } catch (error) {

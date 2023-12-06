@@ -53,5 +53,21 @@ export const userLogin = async (req, res) => {
 };
 
 
+export const forgetPassword = async (req, res) => {
+  try {
+    const data = await UserService.forgetPassword(req.params.id, req.body);
+    res.status(HttpStatus.CREATED).json({
+      code: HttpStatus.CREATED,
+      data: data,
+    });
+  } catch (error) {
+    res.status(HttpStatus.BAD_REQUEST).json({
+      code: HttpStatus.BAD_REQUEST,
+      message: `${error}`
+    });
+  }
+};
+
+
 
 

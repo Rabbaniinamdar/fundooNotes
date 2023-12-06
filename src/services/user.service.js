@@ -52,3 +52,24 @@ export const userLogin = async (body) => {
     throw new Error('User not found');
   }
 };
+
+// Log in the user and generate a JWT
+export const forgetPassword = async (id, body) => {
+  let { password, confirmpassword } = body;
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  if (password === confirmpassword) {
+    body.password = hash;
+    body.confirmpassword = hash;
+    const data = await User.findByIdAndUpdate(
+      id,
+      body,
+      {
+        new: true
+      }
+    );
+    return data;
+  } else {
+    throw new Error('Password is not matching');
+  }
+}

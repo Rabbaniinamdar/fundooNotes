@@ -1,8 +1,9 @@
+/* eslint-disable max-len */
 /* eslint-disable prettier/prettier */
 import express from 'express';
 import * as userController from '../controllers/user.controller';
 // eslint-disable-next-line max-len
-import { newUserValidator, loginUserValidator } from '../validators/user.validator';
+import { newUserValidator, loginUserValidator, forgetPasswordValidator } from '../validators/user.validator';
 // import { userAuth } from '../middlewares/auth.middleware';
 
 const router = express.Router();
@@ -12,6 +13,9 @@ router.post('/register', newUserValidator, userController.UserRegister);
 
 //route to login the user
 router.post('/login', loginUserValidator, userController.userLogin);
+
+router.put('/forgetpassword/:id', forgetPasswordValidator, userController.forgetPassword);
+
 
 
 export default router;

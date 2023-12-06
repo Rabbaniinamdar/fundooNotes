@@ -26,7 +26,7 @@ const api_version = process.env.API_VERSION;
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3001' }));
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
