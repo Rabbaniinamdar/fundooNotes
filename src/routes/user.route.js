@@ -3,8 +3,8 @@
 import express from 'express';
 import * as userController from '../controllers/user.controller';
 // eslint-disable-next-line max-len
-import { newUserValidator, loginUserValidator, forgetPasswordValidator } from '../validators/user.validator';
-// import { userAuth } from '../middlewares/auth.middleware';
+import { newUserValidator, loginUserValidator, forgetPasswordValidator, resetPasswordValidator } from '../validators/user.validator';
+import { userAuth } from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
@@ -14,8 +14,9 @@ router.post('/register', newUserValidator, userController.UserRegister);
 //route to login the user
 router.post('/login', loginUserValidator, userController.userLogin);
 
-router.put('/forgetpassword/:id', forgetPasswordValidator, userController.forgetPassword);
+router.put('/forgetpassword', forgetPasswordValidator, userController.forgetPassword);
 
+router.put('/resetpassword/:id', userAuth, resetPasswordValidator, userController.resetPassword);
 
 
 export default router;

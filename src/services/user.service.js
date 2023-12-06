@@ -54,22 +54,64 @@ export const userLogin = async (body) => {
 };
 
 // Log in the user and generate a JWT
-export const forgetPassword = async (id, body) => {
-  let { password, confirmpassword } = body;
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(password, salt);
-  if (password === confirmpassword) {
-    body.password = hash;
-    body.confirmpassword = hash;
-    const data = await User.findByIdAndUpdate(
-      id,
-      body,
-      {
-        new: true
+export const forgetPassword = async (body) => {
+  console.log(body)
+  let { email, password, confirmpassword } = body;
+  const user = await User.findOne({ email: email });
+  const isCurrPrevMatch = await bcrypt.compare(password, user.password);
+  if (user) {
+    if (!isCurrPrevMatch) {
+      if (password === confirmpassword) {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+        body.password = hash;
+        body.confirmpassword = hash;
+        const data = await User.findByIdAndUpdate(
+          user.id,
+          body,
+          {
+            new: true
+          }
+        );
+        return data;
+      } else {
+        throw new Error('Password is not matching');
       }
-    );
-    return data;
+    } else {
+      throw new Error('Enterd Password shuold not same as previous password');
+    }
   } else {
-    throw new Error('Password is not matching');
+    throw new Error('User not found');
+  }
+}
+
+export const resetPassword = async (id, body) => {
+  let { oldpassword, newpassword, confirmpassword } = body;
+  const user = await User.findById(id);
+  const isCurrPrevMatch = await bcrypt.compare(oldpassword, user.password);
+  console.log(isCurrPrevMatch)
+  if (isCurrPrevMatch) {
+    if (oldpassword !== newpassword) {
+      if (newpassword === confirmpassword) {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(newpassword, salt);
+        body.password = hash;
+        body.confirmpassword = hash;
+        const data = await User.findByIdAndUpdate(
+          user.id,
+          body,
+          {
+            new: true
+          }
+        );
+        return data;
+      } else {
+        throw new Error('New Password and Confirm password is not matching');
+      }
+    } else {
+      throw new Error('Old Password and New Password shuold not be same.');
+    }
+  } else {
+    throw new Error('Old Password is Not Correct.');
   }
 }
