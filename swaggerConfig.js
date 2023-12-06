@@ -4,8 +4,8 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Rabbani API DOC',
-      version: '1.0.0',
+      title: 'FundoNotes API DOC',
+      version: '1.0.1',
       description: 'API documentation using Swagger',
     },
     servers: [
