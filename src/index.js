@@ -14,6 +14,8 @@ import {
   notFound,
 } from './middlewares/error.middleware';
 import logger, { logStream } from './config/logger';
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('../swaggerConfig');
 
 import morgan from 'morgan';
 
@@ -21,6 +23,8 @@ const app = express();
 const host = process.env.APP_HOST;
 const port = process.env.APP_PORT;
 const api_version = process.env.API_VERSION;
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(cors());
 app.use(helmet());

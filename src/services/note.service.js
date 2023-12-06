@@ -11,12 +11,11 @@ export const addToNote = async (currentUser, body) => {
 
 //get all Not of a particular user
 export const getAllNoteOfUser = async (currentUser) => {
-    console.log(currentUser)
     const notes = await Note.find({ userId: currentUser });
     return notes;
 };
 
-//get single Note
+//get all Notes of a user
 export const getNoteofUser = async (id) => {
     const data = await Note.findById(id);
     return data;
@@ -28,6 +27,7 @@ export const deleteNote = async (id) => {
     return '';
 };
 
+//update single Note
 export const updateNote = async (id, body) => {
     const data = await Note.findByIdAndUpdate(
         id,
@@ -35,6 +35,30 @@ export const updateNote = async (id, body) => {
         {
             new: true
         }
+    );
+    return data;
+};
+
+export const archiveNote = async () => {
+    const data = await Note.find({ archived: true });
+    return data;
+};
+
+export const addToArchive = async (id) => {
+    const data = await Note.findByIdAndUpdate(
+        id,
+        { archived: true },
+        { new: true }
+    );
+
+    return data;
+};
+
+export const unArchive = async (id) => {
+    const data = await Note.findByIdAndUpdate(
+        id,
+        { archived: false },
+        { new: true }
     );
     return data;
 };

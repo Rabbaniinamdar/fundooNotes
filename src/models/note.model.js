@@ -8,8 +8,12 @@ const AddToNoteSchema = new Schema(
         title: {
             type: String
         },
-        discription: {
+        description: {
             type: String
+        },
+        archived: {
+            type: Boolean,
+            default: false
         }
     },
     {

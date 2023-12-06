@@ -1,9 +1,9 @@
+/* eslint-disable prettier/prettier */
 import mongoose from 'mongoose';
 import logger from './logger';
 
 const database = async () => {
   try {
-    // Replace database value in the .env file with your database config url
     const DATABASE =
       process.env.NODE_ENV === 'test'
         ? process.env.DATABASE_TEST

@@ -4,9 +4,9 @@ import HttpStatus from 'http-status-codes';
 
 export const newUserValidator = (req, res, next) => {
   const schema = Joi.object({
-    firstname: Joi.string().min(1).required(),
-    lastname: Joi.string().min(1).required(),
-    email: Joi.string().min(4).required(),
+    firstname: Joi.string().required(),
+    lastname: Joi.string().required(),
+    email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
     confirmpassword: Joi.string().required()
   });
@@ -24,7 +24,7 @@ export const newUserValidator = (req, res, next) => {
 
 export const loginUserValidator = (req, res, next) => {
   const schema = Joi.object({
-    email: Joi.string().min(4).required(),
+    email: Joi.string().email().required(),
     password: Joi.string().min(8).required()
   });
   const { error } = schema.validate(req.body);
@@ -40,8 +40,8 @@ export const loginUserValidator = (req, res, next) => {
 };
 export const UpdateUserValidator = (req, res, next) => {
   const schema = Joi.object({
-    firstname: Joi.string().min(4).required(),
-    lastname: Joi.string().min(4).required(),
+    firstname: Joi.string().required(),
+    lastname: Joi.string().required(),
     password: Joi.string().min(8).required(),
     confirmpassword: Joi.string().required()
   });

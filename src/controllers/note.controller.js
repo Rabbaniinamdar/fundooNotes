@@ -22,8 +22,8 @@ export const getAllNoteOfUser = async (req, res) => {
     try {
         const currentUser = res.locals.user.userId;
         const data = await NoteService.getAllNoteOfUser(currentUser);
-        res.status(HttpStatus.CREATED).json({
-            code: HttpStatus.CREATED,
+        res.status(HttpStatus.OK).json({
+            code: HttpStatus.OK,
             data: data,
         });
     } catch (error) {
@@ -72,8 +72,55 @@ export const deleteNote = async (req, res) => {
         await NoteService.deleteNote(req.params.id);
         res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
-            data: [],
             message: 'Note deleted successfully'
+        });
+    } catch (error) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            message: `${error}`
+        });
+    }
+};
+
+
+export const archiveNote = async (req, res) => {
+    console.log('error')
+    try {
+        await NoteService.archiveNote();
+        res.status(HttpStatus.OK).json({
+            code: HttpStatus.OK,
+            message: 'Fetched Archived Notes Successfully'
+        });
+    } catch (error) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            message: `${error}`
+        });
+    }
+};
+
+export const addToArchive = async (req, res) => {
+    try {
+        await NoteService.addToArchive(req.params.id);
+        res.status(HttpStatus.OK).json({
+            code: HttpStatus.OK,
+            message: 'Note Archived Successfully'
+        });
+    } catch (error) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            message: `${error}`
+        });
+    }
+};
+
+
+export const unArchive = async (req, res) => {
+    try {
+        await NoteService.unArchive(req.params.id);
+        res.status(HttpStatus.OK).json({
+            code: HttpStatus.OK,
+            message: 'Note Unarchived Successfully'
         });
     } catch (error) {
         res.status(HttpStatus.BAD_REQUEST).json({
