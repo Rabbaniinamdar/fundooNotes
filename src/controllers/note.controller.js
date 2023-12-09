@@ -5,6 +5,7 @@ import * as NoteService from '../services/note.service';
 export const addToNote = async (req, res) => {
     try {
         const currentUser = res.locals.user.userId;
+        console.log(currentUser)
         const data = await NoteService.addToNote(currentUser, req.body);
         res.status(HttpStatus.CREATED).json({
             code: HttpStatus.CREATED,
@@ -86,7 +87,7 @@ export const deleteNote = async (req, res) => {
 export const archiveNote = async (req, res) => {
     const currentUser = res.locals.user.userId;
     try {
-        const data=await NoteService.archiveNote(currentUser);
+        const data = await NoteService.archiveNote(currentUser);
         res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
             data: data,

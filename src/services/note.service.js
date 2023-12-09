@@ -3,8 +3,10 @@ import Note from '../models/note.model';
 import dotenv from 'dotenv';
 dotenv.config();
 
+//Create New Note
 export const addToNote = async (currentUser, body) => {
     body.userId = currentUser
+    console.log(currentUser)
     const newNote = await Note.create(body);
     return newNote;
 };
@@ -39,11 +41,13 @@ export const updateNote = async (id, body) => {
     return data;
 };
 
+//get all archive Notes
 export const archiveNote = async (currentUser) => {
     const data = await Note.find({ archived: true, userId: currentUser });
     return data;
 };
 
+//archive a single Note
 export const addToArchive = async (id) => {
     const data = await Note.findByIdAndUpdate(
         id,
@@ -54,6 +58,7 @@ export const addToArchive = async (id) => {
     return data;
 };
 
+//unarchive a single Note
 export const unArchive = async (id) => {
     const data = await Note.findByIdAndUpdate(
         id,
