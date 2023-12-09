@@ -3,12 +3,12 @@ import User from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import HttpStatus from 'http-status-codes';
 import * as userUtils from '../utils/user.util';
 
 dotenv.config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
+
 
 const generateToken = (userId) => {
   const token = jwt.sign({ userId }, SECRET_KEY, { expiresIn: '1h' });
@@ -55,9 +55,6 @@ export const loginUser = async (body) => {
   }
 };
 
-
-
-
 export const forgetPassword = async (body) => {
   try {
     const { email } = body;
@@ -66,7 +63,7 @@ export const forgetPassword = async (body) => {
     if (!user) {
       throw new Error('User not found');
     }
-    const token = jwt.sign({ userId: user._id }, SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY_NAME, { expiresIn: '1h' });
 
     return userUtils.sendEmail(token, email);
   } catch (error) {
@@ -74,30 +71,23 @@ export const forgetPassword = async (body) => {
   }
 };
 
-export const resetPassword = async (token, body) => {
+
+export const resetPassword = async (req, userdetails) => {
   try {
-    let bearerToken = token;
-    if (!bearerToken) {
-      throw {
-        code: HttpStatus.BAD_REQUEST,
-        message: 'Authorization token is required'
-      };
-    }
-
-    const decodedToken = jwt.verify(bearerToken, SECRET_KEY);
-
-    const hashedPassword = hashPassword(body.password)
-
+    let bearerToken = req.header('Authorization');
+    const decodedToken = jwt.verify(bearerToken, process.env.SECRET_KEY_NAME);
+    const hashedPassword = await hashPassword(userdetails.userId);
     const user = await User.findByIdAndUpdate(
       decodedToken.userId,
-      { password: hashedPassword },
+      {
+        password: hashedPassword,
+        confirmpassword: hashedPassword,
+      },
       { new: true }
     );
-
     if (!user) {
       throw new Error('User not found');
     }
-
     return { message: 'Password reset successfully' };
   } catch (error) {
     throw new Error('Internal server error: ' + error.message);
