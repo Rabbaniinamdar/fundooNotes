@@ -6,7 +6,7 @@ import { resetPasswordAuth } from '../middlewares/auth.middleware'
 const router = express.Router();
 
 // Route to create a new user
-router.post('/register', newUserValidator, userController.UserRegister);
+router.post('/', newUserValidator, userController.UserRegister);
 
 // Route to login a user
 router.post('/login', loginUserValidator, userController.userLogin);

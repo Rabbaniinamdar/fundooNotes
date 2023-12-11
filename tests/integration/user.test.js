@@ -7,25 +7,33 @@ import mongoose from 'mongoose';
 import app from '../../src/index';
 
 describe('User APIs Test', () => {
-  before((done) => {
-    const clearCollections = () => {
+  let token;
+  let id;
+
+  before(async () => {
+    const clearCollections = async () => {
+      await mongoose.connect(process.env.DATABASE_TEST, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
       for (const collection in mongoose.connection.collections) {
-        mongoose.connection.collections[collection].deleteOne(() => { });
+        await mongoose.connection.collections[collection].deleteMany({});
       }
     };
 
     const mongooseConnect = async () => {
-      await mongoose.connect(process.env.DATABASE_TEST);
-      clearCollections();
+      await mongoose.connect(process.env.DATABASE_TEST, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      await clearCollections();
     };
 
     if (mongoose.connection.readyState === 0) {
-      mongooseConnect();
+      await mongooseConnect();
     } else {
-      clearCollections();
+      await clearCollections();
     }
-
-    done();
   });
 
   describe('POST /users', () => {
@@ -35,182 +43,116 @@ describe('User APIs Test', () => {
         "lastname": "virat",
         "email": "virat@gmail.com",
         "password": "virat123",
-        "confirmpassword": "virat123"
+        "confirmpassword": "virat123",
       };
 
-      console.log('Test started');
       request(app)
-        .post('/api/v2/users/register')
+        .post('/api/v2/users/')
         .send(userDetails)
         .end((err, res) => {
-          console.log('Request completed');
           expect(res.statusCode).to.be.equal(201);
           done();
         });
     });
   });
 
-  describe('POST /users', () => {
+  describe('POST /users/login', () => {
     it('should login a user', (done) => {
       const userDetails = {
-        email: "kohili@gmail.com",
-        password: "Virat123",
+        email: "virat@gmail.com",
+        password: "virat123",
       };
-
-      console.log('Test started');
 
       request(app)
         .post('/api/v2/users/login')
         .send(userDetails)
         .end((err, res) => {
-          console.log('Request completed.', res.body.data);
+          expect(res.statusCode).to.be.equal(201);
+          token = res.body.token;
+          done();
+        });
+    });
+  });
+
+  describe('POST /note', () => {
+    it('should create a note', (done) => {
+      const userDetails = {
+        title: "Note 1",
+        description: "Something Important has to do",
+      };
+      request(app)
+        .post('/api/v2/note')
+        .set('Authorization', `${token}`)
+        .send(userDetails)
+        .end((err, res) => {
+          id = res.body.data._id;
+          expect(res.statusCode).to.be.equal(200);
+          console.log("idid" + id)
+          done();
+        });
+    });
+  });
+
+  // Uncomment and implement additional test blocks as needed
+  /*
+  describe('GET /note', () => {
+    it('should get all notes', (done) => {
+      request(app)
+        .get('/api/v2/note')
+        .set('Authorization', `${token}`)
+        .end((err, res) => {
           expect(res.statusCode).to.be.equal(200);
           done();
         });
     });
   });
 
-  // describe('POST/note', () => {
-  //   it('should create a note', (done) => {
-  //     const userDetails = {
-  //       title: "Note 1",
-  //       decription: "Somthing Impotrtant has to do"
-  //     };
+  describe('GET /note/:id', () => {
+    it('should get a specific note', (done) => {
+      request(app)
+        .get(`/api/v2/note/${id}`)
+        .set('Authorization', `${token}`)
+        .end((err, res) => {
+          expect(res.statusCode).to.be.equal(200);
+          done();
+        });
+    });
+  });
 
-  //     console.log('Test started');
+  describe('PUT /note/:id', () => {
+    it('should update a note', (done) => {
+      const updateNoteDetails = {
+        title: "Updated Title",
+        description: "Updated Description",
+      };
 
-  //     request(app)
-  //       .post('/api/v2/note')
-  //       .set('Authorization', `${token}`)
-  //       .send(userDetails)
-  //       .end((err, res) => {
-  //         id = res.body.data._id;
-  //         console.log('Request completed');
-  //         expect(res.statusCode).to.be.equal(200);
-  //         done();
-  //       });
-  //   });
-  // });
+      request(app)
+        .put(`/api/v2/note/${id}`)
+        .set('Authorization', `${token}`)
+        .send(updateNoteDetails)
+        .end((err, res) => {
+          expect(res.statusCode).to.be.equal(200);
+          done();
+        });
+    });
+  });
 
-  // describe('GET /note', () => {
-  //   it('should get all note', (done) => {
+  describe('DELETE /note/:id', () => {
+    it('should delete a note', (done) => {
+      request(app)
+        .delete(`/api/v2/note/${id}`)
+        .set('Authorization', `${token}`)
+        .end((err, res) => {
+          expect(res.statusCode).to.be.equal(200);
+          done();
+        });
+    });
+  });
 
-  //     console.log('Test started');
-
-  //     request(app)
-  //       .get('/api/v2/note')
-  //       .set('Authorization', `${token}`)
-  //       .end((err, res) => {
-  //         console.log('Request completed');
-  //         expect(res.statusCode).to.be.equal(200);
-  //         done();
-  //       });
-  //   });
-  // });
-
-
-  // describe('GET /note', () => {
-  //   it('should get a note', (done) => {
-
-  //     console.log('Test started');
-
-  //     request(app)
-  //       .get(`/api/v2/note/${id}`)
-  //       .set('Authorization', `${token}`)
-  //       .end((err, res) => {
-  //         console.log('Request completed');
-  //         expect(res.statusCode).to.be.equal(200);
-  //         done();
-  //       });
-  //   });
-  // });
-
-  // describe('PUT /note', () => {
-  //   it('should update note', (done) => {
-  //     const updateUserDetails = {
-  //       title: "Title changed",
-  //       decription: "decription changed"
-  //     };
-  //     console.log('Test started');
-
-  //     request(app)
-  //       .put(`/api/v2/note/${id}`)
-  //       .set('Authorization', ` ${token}`)
-  //       .send(updateUserDetails)
-  //       .end((err, res) => {
-  //         console.log('Request completed');
-  //         expect(res.statusCode).to.be.equal(200);
-  //         done();
-  //       });
-  //   });
-  // });
-
-  // describe('DELETE /note', () => {
-  //   it('should delete note', (done) => {
-
-  //     console.log('Test started');
-
-  //     request(app)
-  //       .delete(`/api/v2/note/deleteNote/${id}`)
-  //       .set('Authorization', `${token}`)
-  //       .end((err, res) => {
-  //         console.log('Request completed');
-  //         expect(res.statusCode).to.be.equal(200);
-  //         done();
-  //       });
-  //   });
-  // });
-
-  // describe('PUT /note', () => {
-  //   it('should achive note', (done) => {
-
-  //     console.log('Test started');
-
-  //     request(app)
-  //       .put(`/api/v2/note/archive/${id}`)
-  //       .set('Authorization', `${token}`)
-  //       .end((err, res) => {
-  //         console.log('Request completed');
-  //         expect(res.statusCode).to.be.equal(200);
-  //         done();
-  //       });
-  //   });
-  // });
-
-  // describe('PUT /note', () => {
-  //   it('should unarchive a note', (done) => {
-
-  //     console.log('Test started');
-
-  //     request(app)
-  //       .put(`/api/v2/note/unarchive/${id}`)
-  //       .set('Authorization', `${token}`)
-  //       .end((err, res) => {
-  //         console.log('Request completed');
-  //         expect(res.statusCode).to.be.equal(200);
-  //         done();
-  //       });
-  //   });
-  // });
-
-  // describe('DELETE /note', () => {
-  //   it('should delete archive note', (done) => {
-
-  //     console.log('Test started');
-
-  //     request(app)
-  //       .put(`/api/v2/note/deletearchive/${id}`)
-  //       .set('Authorization', `${token}`)
-  //       .end((err, res) => {
-  //         console.log('Request completed');
-  //         expect(res.statusCode).to.be.equal(200);
-  //         done();
-  //       });
-  //   });
-  // });
+  // Add more test blocks as needed
+  */
 
   after((done) => {
     mongoose.disconnect(done);
   });
-
 });

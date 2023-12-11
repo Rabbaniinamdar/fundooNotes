@@ -25,8 +25,8 @@ export const userLogin = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    res.status(HttpStatus.BAD_REQUEST).json({
-      code: HttpStatus.BAD_REQUEST,
+    res.status(HttpStatus.UNAUTHORIZED).json({
+      code: HttpStatus.UNAUTHORIZED,
       message: `${error}`
     });
   }
@@ -40,8 +40,8 @@ export const forgetPassword = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    res.status(HttpStatus.BAD_REQUEST).json({
-      code: HttpStatus.BAD_REQUEST,
+    res.status(HttpStatus.UNAUTHORIZED).json({
+      code: HttpStatus.UNAUTHORIZED,
       message: `${error}`
     });
   }
@@ -55,8 +55,8 @@ export const resetPassword = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    res.status(HttpStatus.BAD_REQUEST).json({
-      code: HttpStatus.BAD_REQUEST,
+    res.status(HttpStatus.UNAUTHORIZED).json({
+      code: HttpStatus.UNAUTHORIZED,
       message: `${error}`
     });
   }

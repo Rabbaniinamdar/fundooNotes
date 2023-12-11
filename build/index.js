@@ -14,15 +14,22 @@ var _routes = _interopRequireDefault(require("./routes"));
 var _database = _interopRequireDefault(require("./config/database"));
 var _error = require("./middlewares/error.middleware");
 var _logger = _interopRequireWildcard(require("./config/logger"));
+var _swaggerUiExpress = _interopRequireDefault(require("swagger-ui-express"));
+var _swagger = _interopRequireDefault(require("../src/swagger/swagger.json"));
 var _morgan = _interopRequireDefault(require("morgan"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { "default": e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && Object.prototype.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n["default"] = e, t && t.set(e, n), n; }
+/* eslint-disable prettier/prettier */
+
 _dotenv["default"].config();
 var app = (0, _express["default"])();
 var host = process.env.APP_HOST;
 var port = process.env.APP_PORT;
 var api_version = process.env.API_VERSION;
-app.use((0, _cors["default"])());
+app.use('/api-docs', _swaggerUiExpress["default"].serve, _swaggerUiExpress["default"].setup(_swagger["default"]));
+app.use((0, _cors["default"])({
+  origin: 'http://localhost:3001'
+}));
 app.use((0, _helmet["default"])());
 app.use(_express["default"].urlencoded({
   extended: true

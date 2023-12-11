@@ -21,7 +21,7 @@ export const sendEmail = async (token, email) => {
             text: `Your password reset token is: ${token}`,
             // eslint-disable-next-line max-len
             html: `<h1>Hello,<br><br>Click on the given link to reset your password!</h1><br><h1>Link: 
-            <a href="http://localhost:${process.env.APP_PORT}/api/v2/resetpassword/${token}">click here</a></h1>`
+            <a href="http://localhost:${process.env.APP_PORT}/api/v2/users/resetpassword">click here</a></h1>`
         };
         await transporter.sendMail(mailOptions);
 

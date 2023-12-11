@@ -8,14 +8,15 @@ import helmet from 'helmet';
 
 import routes from './routes';
 import database from './config/database';
+
 import {
   appErrorHandler,
   genericErrorHandler,
   notFound,
 } from './middlewares/error.middleware';
 import logger, { logStream } from './config/logger';
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('../swaggerConfig');
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../src/swagger/swagger.json'
 
 import morgan from 'morgan';
 
@@ -24,7 +25,7 @@ const host = process.env.APP_HOST;
 const port = process.env.APP_PORT;
 const api_version = process.env.API_VERSION;
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(cors({ origin: 'http://localhost:3001' }));
 app.use(helmet());
