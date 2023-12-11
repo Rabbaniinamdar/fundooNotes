@@ -67,8 +67,8 @@ describe('User APIs Test', () => {
         .post('/api/v2/users/login')
         .send(userDetails)
         .end((err, res) => {
+          token = res.body.data.token;
           expect(res.statusCode).to.be.equal(201);
-          token = res.body.token;
           done();
         });
     });
@@ -86,15 +86,12 @@ describe('User APIs Test', () => {
         .send(userDetails)
         .end((err, res) => {
           id = res.body.data._id;
-          expect(res.statusCode).to.be.equal(200);
-          console.log("idid" + id)
+          expect(res.statusCode).to.be.equal(201);
           done();
         });
     });
   });
 
-  // Uncomment and implement additional test blocks as needed
-  /*
   describe('GET /note', () => {
     it('should get all notes', (done) => {
       request(app)
@@ -131,7 +128,7 @@ describe('User APIs Test', () => {
         .set('Authorization', `${token}`)
         .send(updateNoteDetails)
         .end((err, res) => {
-          expect(res.statusCode).to.be.equal(200);
+          expect(res.statusCode).to.be.equal(202);
           done();
         });
     });
@@ -149,8 +146,43 @@ describe('User APIs Test', () => {
     });
   });
 
-  // Add more test blocks as needed
-  */
+  describe('PUT /note/archive/:id', () => {
+    it('should archive a note', (done) => {
+
+      request(app)
+        .put(`/api/v2/note/${id}`)
+        .set('Authorization', `${token}`)
+        .end((err, res) => {
+          expect(res.statusCode).to.be.equal(202);
+          done();
+        });
+    });
+  });
+
+  describe('PUT /note/unarchive/:id', () => {
+    it('should unarchive a note', (done) => {
+
+      request(app)
+        .put(`/api/v2/note/${id}`)
+        .set('Authorization', `${token}`)
+        .end((err, res) => {
+          expect(res.statusCode).to.be.equal(202);
+          done();
+        });
+    });
+  });
+  describe('PUT /note/unarchive/:id', () => {
+    it('should unarchive a note', (done) => {
+
+      request(app)
+        .put(`/api/v2/note/${id}`)
+        .set('Authorization', `${token}`)
+        .end((err, res) => {
+          expect(res.statusCode).to.be.equal(202);
+          done();
+        });
+    });
+  });
 
   after((done) => {
     mongoose.disconnect(done);
