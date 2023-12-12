@@ -16,8 +16,7 @@
     "basePath": "/api/v2/",
     "tags": [
         {
-            "name": "Fundo App",
-            "description": "Creating user......."
+            "name": "Fundo App"
         }
     ],
     "schemes": [
@@ -32,20 +31,20 @@
     "paths": {
         "/users": {
             "post": {
-                "tags": [],
-                "description": "Create user",
+                "tags": [
+                    "Fundo App"
+                ],
+                "summary": "Create user",
+                "description": "Create a new user",
                 "parameters": [
                     {
-                        "name": "Create user",
+                        "name": "user",
                         "in": "body",
                         "description": "Create",
                         "schema": {
                             "$ref": "#/definitions/Register"
                         }
                     }
-                ],
-                "produces": [
-                    "application/json"
                 ],
                 "responses": {
                     "201": {
@@ -59,11 +58,14 @@
         },
         "/users/login": {
             "post": {
-                "tags": [],
-                "description": "Login user",
+                "tags": [
+                    "Fundo App"
+                ],
+                "summary": "Login user",
+                "description": "Login an existing user",
                 "parameters": [
                     {
-                        "name": "Login user",
+                        "name": "Login User",
                         "in": "body",
                         "description": "Login",
                         "schema": {
@@ -71,12 +73,9 @@
                         }
                     }
                 ],
-                "produces": [
-                    "application/json"
-                ],
                 "responses": {
                     "201": {
-                        "description": "New user is created"
+                        "description": "User logged in successfully"
                     },
                     "500": {
                         "description": "Internal server error"
@@ -94,10 +93,11 @@
                 "tags": [
                     "Fundo App"
                 ],
+                "summary": "Add a new note",
                 "description": "Add a new note",
                 "parameters": [
                     {
-                        "name": "note",
+                        "name": "Create Note",
                         "in": "body",
                         "description": "Note object",
                         "required": true,
@@ -127,6 +127,7 @@
                 "tags": [
                     "Fundo App"
                 ],
+                "summary": "Get all notes of the particular user",
                 "description": "Get all notes of the particular user",
                 "responses": {
                     "200": {
@@ -137,6 +138,187 @@
                     },
                     "500": {
                         "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/note/{id}/": {
+            "put": {
+                "tags": [
+                    "Fundo App"
+                ],
+                "summary": "Update a note",
+                "description": "Update a note",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "ID of the note to be updated"
+                    },
+                    {
+                        "name": "Update Note",
+                        "in": "body",
+                        "description": "Note object that needs to be updated",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateNote"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Note updated successfully"
+                    },
+                    "404": {
+                        "description": "Note not found"
+                    }
+                }
+            }
+        },
+        "/note/{id}": {
+            "get": {
+                "tags": [
+                    "Fundo App"
+                ],
+                "summary": "Get a note of a particular user",
+                "description": "Get a note of a particular user",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "ID of the note to be retrieved"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Note retrieved successfully"
+                    },
+                    "404": {
+                        "description": "Note not found"
+                    }
+                }
+            }
+        },
+        "/note/archive/{id}": {
+            "put": {
+                "tags": [
+                    "Fundo App"
+                ],
+                "summary": "Archive a note",
+                "description": "Archive a note",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "ID of the note to be Archive"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Note archived successfully"
+                    },
+                    "404": {
+                        "description": "Note not found"
+                    }
+                }
+            }
+        },
+        "/note/archive": {
+            "get": {
+                "tags": [
+                    "Fundo App"
+                ],
+                "summary": "Get all archived notes",
+                "description": "Get all archived notes",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Archived notes retrieved successfully"
+                    }
+                }
+            }
+        },
+        "/note/unarchive/{id}": {
+            "put": {
+                "summary": "Unarchive a note",
+                "tags": [
+                    "Fundo App"
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "ID of the note to be UnArchive"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Note unarchived successfully"
+                    },
+                    "404": {
+                        "description": "Note not found"
+                    }
+                }
+            }
+        },
+        "/note/deletearchive/{id}": {
+            "delete": {
+                "summary": "Delete an archived note",
+                "tags": [
+                    "Fundo App"
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "ID of the note to be Delete Archive"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Archived note deleted successfully"
+                    },
+                    "404": {
+                        "description": "Archived note not found"
                     }
                 }
             }
@@ -180,7 +362,18 @@
                 "title": {
                     "type": "string"
                 },
-                "discription": {
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "UpdateNote": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "description": {
                     "type": "string"
                 }
             }

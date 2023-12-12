@@ -14,8 +14,8 @@ router.get('/', userAuth, noteController.getAllNoteOfUser);
 //route to update note
 router.put('/:id', userAuth, noteController.updateNote);
 
-//route to delete note
-router.delete('/:id', userAuth, noteController.deleteNote);
+// //route to delete note
+// router.delete('/:id', userAuth, noteController.deleteNote);
 
 //route to get all archive note
 router.get('/archive', userAuth, noteController.archiveNote);
