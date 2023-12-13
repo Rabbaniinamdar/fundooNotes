@@ -1,25 +1,20 @@
 /* eslint-disable prettier/prettier */
-import { createClient } from 'redis';
+import { client } from '../config/redis'
 
-export const client = createClient({
-    host: '127.0.0.1',
-    port: 6379,
-    enableOfflineQueue: false,
-});
+export const cacheMiddleware = async (req, res, next) => {
 
-export const getUserMiddleware = (req, res, next) => {
-
-    const email = req.params.email;
-    client.get(email, (err, userData) => {
-        if (err) {
-            throw new Error('Error retrieving user data from Redis:', err);
+    const currentUser = res.locals.user.userId;
+    console.log('userId', currentUser);
+    try {
+        const catchData = await client.get(currentUser);
+        console.log('catchData ' + catchData)
+        if (catchData) {
+            console.log('Data retrieved from cache', catchData);
+            return res.json(JSON.parse(catchData));
         }
-        if (userData) {
-            console.log(userData)
-            req.user = JSON.parse(userData);
-            next();
-        } else {
-            next();
-        }
-    });
+        next();
+    } catch (error) {
+        console.log('Error retrieving user data from Redis:', error);
+        next();
+    }
 };

@@ -8,6 +8,7 @@ import helmet from 'helmet';
 
 import routes from './routes';
 import database from './config/database';
+import client from './config/redis';
 
 import {
   appErrorHandler,
@@ -34,7 +35,7 @@ app.use(express.json());
 app.use(morgan('combined', { stream: logStream }));
 
 database();
-
+client();
 app.use(`/api/${api_version}`, routes());
 app.use(appErrorHandler);
 app.use(genericErrorHandler);

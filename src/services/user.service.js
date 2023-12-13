@@ -6,14 +6,7 @@ import dotenv from 'dotenv';
 import * as userUtils from '../utils/user.util';
 dotenv.config();
 
-import { createClient } from 'redis';
-export const client = createClient({
-    host: '127.0.0.1',
-    port: 6379,
-    enableOfflineQueue: false,
-});
 const SECRET_KEY = process.env.SECRET_KEY;
-
 
 const generateToken = (userId) => {
   const token = jwt.sign({ userId }, SECRET_KEY, { expiresIn: '1h' });
@@ -62,7 +55,6 @@ export const loginUser = async (body) => {
 
 export const getUser = async (email) => {
   const user = await User.findOne({ email });
-  client.set(email, user)
   console.log(user)
   if (user) {
     return { user, data: 'User fetched Successfully' };

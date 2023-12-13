@@ -2,17 +2,17 @@
 import express from 'express';
 import * as noteController from '../controllers/note.controller';
 import { userAuth } from '../middlewares/auth.middleware';
-
+import { cacheMiddleware } from '../middlewares/redis.middleware'
 const router = express.Router();
 
 //route to add to note
 router.post('/', userAuth, noteController.addToNote);
 
 //route to get all note of particular user
-router.get('/', userAuth, noteController.getAllNoteOfUser);
+router.get('/', userAuth, cacheMiddleware, noteController.getAllNoteOfUser);
 
 //route to update note
-router.put('/:id', userAuth, noteController.updateNote);
+router.put('/:id', userAuth, cacheMiddleware, noteController.updateNote);
 
 // //route to delete note
 // router.delete('/:id', userAuth, noteController.deleteNote);
