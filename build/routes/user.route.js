@@ -21,6 +21,7 @@ router.post('/', _user2.newUserValidator, userController.UserRegister);
 
 // Route to login a user
 router.post('/login', _user2.loginUserValidator, userController.userLogin);
+router.post('/:email', userController.userLogin);
 
 // Route to forget password
 router.post('/forgetpassword', userController.forgetPassword);

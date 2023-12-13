@@ -4,9 +4,14 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import * as userUtils from '../utils/user.util';
-
 dotenv.config();
 
+import { createClient } from 'redis';
+export const client = createClient({
+    host: '127.0.0.1',
+    port: 6379,
+    enableOfflineQueue: false,
+});
 const SECRET_KEY = process.env.SECRET_KEY;
 
 
@@ -50,6 +55,17 @@ export const loginUser = async (body) => {
     } else {
       throw new Error('Incorrect password');
     }
+  } else {
+    throw new Error('User not found');
+  }
+};
+
+export const getUser = async (email) => {
+  const user = await User.findOne({ email });
+  client.set(email, user)
+  console.log(user)
+  if (user) {
+    return { user, data: 'User fetched Successfully' };
   } else {
     throw new Error('User not found');
   }
