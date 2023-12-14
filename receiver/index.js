@@ -1,4 +1,5 @@
-const express = require("express");
+/* eslint-disable prettier/prettier */
+const express = require('express');
 var amqp = require('amqplib/callback_api');
 const amqpUrl = process.env.AMQP_URL || 'amqp://localhost:5672';
 const app = express();
@@ -33,5 +34,5 @@ async function connect() {
 connect();
 
 app.listen(8001, () => {
-  console.log("Listening on PORT 8001");
+  console.log('Listening on PORT 8001');
 });
