@@ -53,15 +53,6 @@ export const loginUser = async (body) => {
   }
 };
 
-export const getUser = async (email) => {
-  const user = await User.findOne({ email });
-  console.log(user)
-  if (user) {
-    return { user, data: 'User fetched Successfully' };
-  } else {
-    throw new Error('User not found');
-  }
-};
 
 export const forgetPassword = async (body) => {
   try {

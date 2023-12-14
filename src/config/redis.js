@@ -1,14 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { createClient } from 'redis';
-
+import logger from './logger';
 export const client = createClient();
 
 const clientRedis = async () => {
     try {
         await client.connect();
-        console.log('connected to the reddis database');
+        logger.info('connected to the reddis database');
     } catch (error) {
-        console.log('could not connect to the reddise database');
+        logger.error('could not connect to the reddise database');
     }
 }
 

@@ -14,6 +14,9 @@ const AddToNoteSchema = new Schema(
         archived: {
             type: Boolean,
             default: false
+        },
+        color: {
+            type: String
         }
     },
     {
