@@ -4,9 +4,8 @@ import * as NoteService from '../services/note.service';
 
 export const addToNote = async (req, res) => {
     try {
-        const currentUser = res.locals.user.userId;
-        console.log(currentUser)
-        const data = await NoteService.addToNote(currentUser, req.body);
+        const currentUserId = res.locals.user.userId;
+        const data = await NoteService.addToNote(currentUserId, req.body);
         res.status(HttpStatus.CREATED).json({
             code: HttpStatus.CREATED,
             data: data,

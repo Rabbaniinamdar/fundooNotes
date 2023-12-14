@@ -5,20 +5,18 @@ dotenv.config();
 import { client } from '../config/redis';
 
 // Create New Note
-export const addToNote = async (currentUser, body) => {
-    body.userId = currentUser;
-    console.log('currentUser'+ currentUser);
-    await client.del(currentUser);
+export const addToNote = async (currentUserId, body) => {
+    body.userId = currentUserId;
+    await client.del(currentUserId);
     const newNote = await Note.create(body);
-    console.log('newNote' + newNote)
     return newNote;
 };
 
 // Get all Notes of a particular user
-export const getAllNoteOfUser = async (currentUser) => {
-    const notes = await Note.find({ userId: currentUser });
-    console.log('No catche data' + notes)
-    client.set(currentUser, JSON.stringify(notes));
+export const getAllNoteOfUser = async (currentUserId) => {
+    const notes = await Note.find({ userId: currentUserId });
+    console.log('Notes retried from Database' + notes)
+    client.set(currentUserId, JSON.stringify(notes));
     return notes;
 };
 
@@ -30,14 +28,14 @@ export const getNoteofUser = async (id) => {
 };
 
 // Delete a single Note
-export const deleteNote = async (id, currentUser) => {
+export const deleteNote = async (id, currentUserId) => {
     await Note.findByIdAndDelete(id);
-    await client.del(currentUser);
+    await client.del(currentUserId);
     return '';
 };
 
 // Update a single Note
-export const updateNote = async (id, body, currentUser) => {
+export const updateNote = async (id, body, currentUserId) => {
     const data = await Note.findByIdAndUpdate(
         id,
         body,
@@ -45,35 +43,35 @@ export const updateNote = async (id, body, currentUser) => {
             new: true
         }
     );
-    await client.del(currentUser);
+    await client.del(currentUserId);
     return data;
 };
 
 // Get all archived Notes
-export const archiveNote = async (currentUser) => {
-    const data = await Note.find({ archived: true, userId: currentUser });
-    await client.del(currentUser);
+export const archiveNote = async (currentUserId) => {
+    const data = await Note.find({ archived: true, userId: currentUserId });
+    await client.del(currentUserId);
     return data;
 };
 
 // Archive a single Note
-export const addToArchive = async (id, currentUser) => {
+export const addToArchive = async (id, currentUserId) => {
     const data = await Note.findByIdAndUpdate(
         id,
         { archived: true },
         { new: true }
     );
-    await client.del(currentUser);
+    await client.del(currentUserId);
     return data;
 };
 
 // Unarchive a single Note
-export const unArchive = async (id, currentUser) => {
+export const unArchive = async (id, currentUserId) => {
     const data = await Note.findByIdAndUpdate(
         id,
         { archived: false },
         { new: true }
     );
-    await client.del(currentUser);
+    await client.del(currentUserId);
     return data;
 };

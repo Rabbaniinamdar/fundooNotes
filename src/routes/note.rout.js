@@ -3,10 +3,11 @@ import express from 'express';
 import * as noteController from '../controllers/note.controller';
 import { userAuth } from '../middlewares/auth.middleware';
 import { cacheMiddleware } from '../middlewares/redis.middleware'
+import { newNoteValidator } from '../validators/note.validator';
 const router = express.Router();
 
 //route to add to note
-router.post('/', userAuth, noteController.addToNote);
+router.post('/', newNoteValidator, userAuth, noteController.addToNote);
 
 //route to get all note of particular user
 router.get('/', userAuth, cacheMiddleware, noteController.getAllNoteOfUser);

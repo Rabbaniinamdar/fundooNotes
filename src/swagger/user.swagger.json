@@ -1,0 +1,193 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "V2",
+        "title": "Fundo App",
+        "description": "Fundo App API"
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "host": "localhost:3000",
+    "basePath": "/api/v2/",
+    "tags": [
+        {
+            "name": "Fundo App"
+        }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/users": {
+            "post": {
+                "tags": [
+                    "User Module Documentation"
+                ],
+                "summary": "Create user",
+                "description": "Create a new user",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "Create",
+                        "schema": {
+                            "$ref": "#/definitions/Register"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "New user is created"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "tags": [
+                    "Fundo App"
+                ],
+                "summary": "Login user",
+                "description": "Login an existing user",
+                "parameters": [
+                    {
+                        "name": "Login User",
+                        "in": "body",
+                        "description": "Login",
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User logged in successfully"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/forgetpassword": {
+            "post": {
+                "tags": [
+                    "Fundo App"
+                ],
+                "summary": "Forget Password",
+                "description": "Forget Password",
+                "parameters": [
+                    {
+                        "name": "Forget Password",
+                        "in": "body",
+                        "description": "Forget Password",
+                        "schema": {
+                            "$ref": "#/definitions/ForgetPassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Email Sent successfull."
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/resetpassword": {
+            "post": {
+                "tags": [
+                    "Fundo App"
+                ],
+                "summary": "Reset Password",
+                "description": "Reset Password",
+                "parameters": [
+                    {
+                        "name": "Reset Password",
+                        "in": "body",
+                        "description": "Reset Password",
+                        "schema": {
+                            "$ref": "#/definitions/ResetPassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Email Sent successfull."
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Register": {
+            "type": "object",
+            "properties": {
+                "firstname": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "confirmpassword": {
+                    "type": "string"
+                }
+            }
+        },
+        "Login": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "ForgetPassword": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "ResetPassword": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "confirmpassword": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

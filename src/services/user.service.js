@@ -3,12 +3,12 @@ import User from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import * as userUtils from '../utils/user.util';
+import * as emailUtils from '../utils/email.util';
+import * as sendUtils from '../utils/send.utils'
+
 dotenv.config();
 
-const SECRET_KEY = process.env.SECRET_KEY;
-
-const generateToken = (userId) => {
+const generateToken = (userId, SECRET_KEY) => {
   const token = jwt.sign({ userId }, SECRET_KEY, { expiresIn: '1h' });
   return token;
 };
@@ -28,6 +28,7 @@ export const registerUser = async (body) => {
       body.password = hash;
       body.confirmpassword = hash;
       const newUser = await User.create(body);
+      sendUtils.sendMessage({ email, message: 'Thank You for Registaring.' })
       return { data: 'User Registered Successfully', newUser };
     } else {
       throw new Error('Password is not matching');
@@ -43,7 +44,7 @@ export const loginUser = async (body) => {
   if (user) {
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (isPasswordCorrect) {
-      const token = generateToken(user._id);
+      const token = generateToken(user._id, process.env.SECRET_KEY);
       return { data: 'User Logged in Successfully', token };
     } else {
       throw new Error('Incorrect password');
@@ -62,9 +63,10 @@ export const forgetPassword = async (body) => {
     if (!user) {
       throw new Error('User not found');
     }
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY_NAME, { expiresIn: '1h' });
 
-    return userUtils.sendEmail(token, email);
+    const token = generateToken(user._id, process.env.SECRET_KEY_NAME)
+
+    return emailUtils.sendEmail(token, email);
   } catch (error) {
     throw new Error('Internal server error');
   }

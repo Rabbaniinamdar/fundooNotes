@@ -17,7 +17,8 @@ import {
 } from './middlewares/error.middleware';
 import logger, { logStream } from './config/logger';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from '../src/swagger/swagger.json'
+import userSwaggerDocument from '../src/swagger/user.swagger.json'
+import noteSwaggerDocument from '../src/swagger/note.swagger.json'
 
 import morgan from 'morgan';
 
@@ -26,7 +27,8 @@ const host = process.env.APP_HOST;
 const port = process.env.APP_PORT;
 const api_version = process.env.API_VERSION;
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs/user', swaggerUi.serve, swaggerUi.setup(userSwaggerDocument));
+app.use('/api-docs/note', swaggerUi.serve, swaggerUi.setup(noteSwaggerDocument));
 
 app.use(cors({ origin: 'http://localhost:3001' }));
 app.use(helmet());
