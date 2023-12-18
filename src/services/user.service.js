@@ -66,7 +66,7 @@ export const forgetPassword = async (body) => {
 
     const token = generateToken(user._id, process.env.SECRET_KEY_NAME)
 
-    return emailUtils.sendEmail(token, email);
+    return emailUtils.sendEmail(token, email, user.firstname);
   } catch (error) {
     throw new Error('Internal server error');
   }

@@ -16,7 +16,7 @@ router.get('/', userAuth, cacheMiddleware, noteController.getAllNoteOfUser);
 router.put('/:id', userAuth, cacheMiddleware, noteController.updateNote);
 
 // //route to delete note
-// router.delete('/:id', userAuth, noteController.deleteNote);
+router.delete('/:id', userAuth, noteController.deleteNote);
 
 //route to get all archive note
 router.get('/archive', userAuth, noteController.archiveNote);

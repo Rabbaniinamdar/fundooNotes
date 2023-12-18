@@ -69,7 +69,8 @@ export const updateNote = async (req, res) => {
 
 export const deleteNote = async (req, res) => {
     try {
-        await NoteService.deleteNote(req.params.id);
+        const currentUser = res.locals.user.userId;
+        await NoteService.deleteNote(req.params.id, currentUser);
         res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
             message: 'Note deleted successfully'
@@ -87,6 +88,7 @@ export const archiveNote = async (req, res) => {
     const currentUser = res.locals.user.userId;
     try {
         const data = await NoteService.archiveNote(currentUser);
+        console.log(data)
         res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
             data: data,
@@ -102,7 +104,8 @@ export const archiveNote = async (req, res) => {
 
 export const addToArchive = async (req, res) => {
     try {
-        await NoteService.addToArchive(req.params.id);
+        const currentUser = res.locals.user.userId;
+        await NoteService.addToArchive(req.params.id, currentUser);
         res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
             message: 'Note Archived Successfully'
@@ -118,7 +121,8 @@ export const addToArchive = async (req, res) => {
 
 export const unArchive = async (req, res) => {
     try {
-        await NoteService.unArchive(req.params.id);
+        const currentUser = res.locals.user.userId;
+        await NoteService.unArchive(req.params.id, currentUser);
         res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
             message: 'Note Unarchived Successfully'

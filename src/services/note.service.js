@@ -50,6 +50,7 @@ export const updateNote = async (id, body, currentUserId) => {
 // Get all archived Notes
 export const archiveNote = async (currentUserId) => {
     const data = await Note.find({ archived: true, userId: currentUserId });
+    console.log(data)
     await client.del(currentUserId);
     return data;
 };

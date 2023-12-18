@@ -4,6 +4,7 @@ const router = express.Router();
 
 import userRoute from './user.route';
 import noteRoute from './note.rout';
+
 const routes = () => {
   router.get('/', (req, res) => {
     res.json('Welcome');

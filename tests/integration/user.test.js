@@ -12,10 +12,6 @@ describe('User APIs Test', () => {
 
   before(async () => {
     const clearCollections = async () => {
-      await mongoose.connect(process.env.DATABASE_TEST, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
       for (const collection in mongoose.connection.collections) {
         await mongoose.connection.collections[collection].deleteMany({});
       }
@@ -79,6 +75,7 @@ describe('User APIs Test', () => {
       const userDetails = {
         title: "Note 1",
         description: "Something Important has to do",
+        color: "red"
       };
       request(app)
         .post('/api/v2/note')
@@ -128,7 +125,7 @@ describe('User APIs Test', () => {
         .set('Authorization', `${token}`)
         .send(updateNoteDetails)
         .end((err, res) => {
-          expect(res.statusCode).to.be.equal(202);
+          expect(res.statusCode).to.be.equal(200);
           done();
         });
     });
@@ -148,37 +145,41 @@ describe('User APIs Test', () => {
 
   describe('PUT /note/archive/:id', () => {
     it('should archive a note', (done) => {
-
       request(app)
-        .put(`/api/v2/note/${id}`)
-        .set('Authorization', `${token}`)
+        .put(`/api/v2/note/archive/${id}`)
+        .set('Authorization', token)
         .end((err, res) => {
-          expect(res.statusCode).to.be.equal(202);
+          if (err) {
+            return done(err);
+          }
+          expect(res.statusCode).to.equal(200);
           done();
         });
     });
   });
 
-  describe('PUT /note/unarchive/:id', () => {
-    it('should unarchive a note', (done) => {
 
+  describe('GET /note/archive/', () => {
+    it('should get all archive', (done) => {
       request(app)
-        .put(`/api/v2/note/${id}`)
+        .get(`/api/v2/note/archive`)
         .set('Authorization', `${token}`)
         .end((err, res) => {
-          expect(res.statusCode).to.be.equal(202);
+          expect(res.statusCode).to.be.equal(200);
           done();
         });
     });
   });
   describe('PUT /note/unarchive/:id', () => {
     it('should unarchive a note', (done) => {
-
       request(app)
-        .put(`/api/v2/note/${id}`)
-        .set('Authorization', `${token}`)
+        .put(`/api/v2/note/unarchive/${id}`)
+        .set('Authorization', token)
         .end((err, res) => {
-          expect(res.statusCode).to.be.equal(202);
+          if (err) {
+            return done(err);
+          }
+          expect(res.statusCode).to.equal(200);
           done();
         });
     });
